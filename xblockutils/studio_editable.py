@@ -145,12 +145,12 @@ class StudioEditableXBlockMixin(object):
         if "type" not in info:
             raise NotImplementedError("StudioEditableXBlockMixin currently only supports fields derived from JSONField")
         if info["type"] in ("list", "set"):
-            info["value"] = [json.dumps(val) for val in info["value"]]
-            info["default"] = json.dumps(info["default"])
+            info["value"] = [json.dumps(val, ensure_ascii=False) for val in info["value"]]
+            info["default"] = json.dumps(info["default"], ensure_ascii=False)
         elif info["type"] == "generic":
             # Convert value to JSON string if we're treating this field generically:
-            info["value"] = json.dumps(info["value"])
-            info["default"] = json.dumps(info["default"])
+            info["value"] = json.dumps(info["value"], ensure_ascii=False)
+            info["default"] = json.dumps(info["default"], ensure_ascii=False)
         elif info["type"] == "datepicker":
             if info["value"]:
                 info["value"] = info["value"].strftime("%m/%d/%Y")
@@ -188,10 +188,10 @@ class StudioEditableXBlockMixin(object):
                 # e.g. [ {"display_name": "Always", "value": "always"}, ... ]
                 for entry in list_values:
                     assert "display_name" in entry and "value" in entry
-                    entry["value"] = json.dumps(entry["value"])
+                    entry["value"] = json.dumps(entry["value"], ensure_ascii=False)
             else:
                 # e.g. [1, 2, 3] - we need to convert it to the [{"display_name": x, "value": x}] format
-                list_values = [json.dumps(val) for val in list_values]
+                list_values = [json.dumps(val, ensure_ascii=False) for val in list_values]
                 list_values = [{"display_name": unicode(val), "value": val} for val in list_values]
             info['list_values'] = list_values
             info['has_list_values'] = True
